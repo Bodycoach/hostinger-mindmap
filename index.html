@@ -3,135 +3,207 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Infra Hostinger — Mind map visuelle</title>
+  <title>Hostinger Mind Map Studio</title>
   <style>
     :root{
-      --bg:#07111f;--bg2:#0c1830;--card:#101a33cc;--line:rgba(255,255,255,.1);--text:#eef4ff;--muted:#a7b6d6;
-      --ea:#7c3aed;--labz:#10b981;--alpha:#f59e0b;--damien:#38bdf8;--danger:#ef4444;
+      --bg:#09101d;--panel:#10192fcc;--panel2:#0f1730;--line:rgba(255,255,255,.12);--text:#eef4ff;--muted:#9fb0d3;
+      --purple:#7c3aed;--green:#10b981;--orange:#f59e0b;--blue:#38bdf8;--red:#ef4444;
     }
-    *{box-sizing:border-box} html,body{margin:0}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:
-      radial-gradient(circle at 10% 10%, rgba(124,58,237,.22), transparent 25%),
-      radial-gradient(circle at 85% 15%, rgba(16,185,129,.14), transparent 22%),
-      radial-gradient(circle at 50% 100%, rgba(245,158,11,.12), transparent 30%),
-      linear-gradient(180deg,var(--bg),var(--bg2));}
-    .wrap{max-width:1600px;margin:auto;padding:32px 20px 80px}
-    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:stretch;margin-bottom:24px}
-    .hero-card,.info-card,.server,.branch{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
-    .hero-card{padding:30px}
-    h1{font-size:48px;line-height:1;margin:0 0 14px}
-    .lead{font-size:18px;color:var(--muted);max-width:850px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{padding:10px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:#dbe7ff;background:rgba(255,255,255,.04)}
-    .info-card{padding:22px 24px;display:flex;flex-direction:column;justify-content:center}
-    .info-card h2{margin:0 0 12px;font-size:22px}.info-card p{margin:0;color:var(--muted);line-height:1.55}
-    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.kpi{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}.kpi b{display:block;font-size:24px}.kpi span{color:var(--muted);font-size:13px}
-
-    .map{padding:24px;margin-bottom:28px;overflow:auto}
-    .mind{min-width:1300px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:20px;align-items:start}
-    .root{min-height:280px;border-radius:32px;padding:36px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:38px;line-height:1.05;background:linear-gradient(135deg,#6d28d9,#2563eb 60%,#0ea5e9);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 30px 80px rgba(37,99,235,.2)}
-    .branch{padding:18px}.branch h3{margin:0 0 8px;font-size:24px}.branch p{margin:0 0 16px;color:var(--muted)}
-    .node{padding:14px 16px;margin:12px 0;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.035)}
-    .node h4{margin:0 0 8px;font-size:17px}.node ul{margin:0;padding-left:18px;color:var(--muted)}.node li{margin:6px 0}
-    .ea{box-shadow:inset 3px 0 0 var(--ea)} .labz{box-shadow:inset 3px 0 0 var(--labz)} .alpha{box-shadow:inset 3px 0 0 var(--alpha)} .damien{box-shadow:inset 3px 0 0 var(--damien)}
-
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:22px}
-    .server{padding:22px;position:relative;overflow:hidden}
-    .server:before{content:"";position:absolute;inset:-30% auto auto -20%;width:220px;height:220px;border-radius:999px;filter:blur(40px);opacity:.16}
-    .server.ea:before{background:var(--ea)} .server.labz:before{background:var(--labz)} .server.alpha:before{background:var(--alpha)} .server.damien:before{background:var(--damien)}
-    .server h2{margin:0;font-size:30px}.meta{margin:6px 0 14px;color:var(--muted)}
-    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.badge{padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em}
-    .b-ea{background:rgba(124,58,237,.18);color:#ddd6fe}.b-labz{background:rgba(16,185,129,.18);color:#bbf7d0}.b-alpha{background:rgba(245,158,11,.18);color:#fde68a}.b-damien{background:rgba(56,189,248,.18);color:#bae6fd}.b-red{background:rgba(239,68,68,.18);color:#fecaca}
-    .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03)}.panel strong{display:block;margin-bottom:8px}.panel ul{margin:0;padding-left:18px;color:var(--muted)}.panel li{margin:6px 0}
-    .footer{margin-top:18px;color:var(--muted);font-size:14px}
-    @media (max-width:1100px){.hero,.grid{grid-template-columns:1fr}.mind{grid-template-columns:1fr;min-width:0}.root{min-height:180px;font-size:30px}.cols{grid-template-columns:1fr}}
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(124,58,237,.2), transparent 25%),radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 20%),linear-gradient(180deg,#07101e,#0b1426)}
+    .app{display:grid;grid-template-columns:320px 1fr;height:100vh}
+    .sidebar{background:var(--panel);backdrop-filter:blur(14px);border-right:1px solid var(--line);padding:18px;overflow:auto}
+    .sidebar h1{font-size:26px;line-height:1.05;margin:0 0 10px}.sidebar p{color:var(--muted);font-size:14px;line-height:1.45}
+    .group{margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03)}
+    .group h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#cbd5e1;margin:0 0 10px}
+    .row{display:flex;gap:8px;align-items:center;margin:8px 0}.row label{font-size:13px;color:var(--muted);min-width:72px}
+    input[type="text"], textarea, select{width:100%;background:#0b1326;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;font:inherit}
+    textarea{min-height:100px;resize:vertical}
+    input[type="color"]{width:46px;height:38px;border:none;background:transparent;padding:0}
+    button{border:none;border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer;background:#1d4ed8;color:white}
+    button.secondary{background:#18233f;color:#dbe7ff;border:1px solid var(--line)}
+    button.danger{background:#7f1d1d}
+    .toolbar{display:grid;gap:8px}
+    .stage-wrap{position:relative;overflow:hidden}
+    .topbar{position:absolute;top:16px;left:16px;right:16px;z-index:20;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:16px;backdrop-filter:blur(10px)}
+    .pill{padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:#dbe7ff;background:rgba(255,255,255,.04)}
+    .canvas{position:absolute;inset:0;overflow:auto;padding:90px 40px 40px}
+    .board{position:relative;min-width:1800px;min-height:1100px;background-image:radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);background-size:24px 24px}
+    svg#links{position:absolute;inset:0;pointer-events:none;overflow:visible}
+    .node{position:absolute;min-width:220px;max-width:320px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid var(--line);border-left:5px solid var(--accent,#7c3aed);border-radius:20px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,.25);cursor:move;user-select:none}
+    .node.selected{outline:2px solid #fff;box-shadow:0 0 0 4px rgba(255,255,255,.12),0 16px 40px rgba(0,0,0,.3)}
+    .node .title{font-weight:800;font-size:18px;line-height:1.15;margin-bottom:8px}
+    .node .meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .node .content{font-size:13px;color:#d9e3ff;line-height:1.45;white-space:pre-wrap}
+    .node .port{position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:999px;background:var(--accent,#7c3aed);border:2px solid white;cursor:crosshair;pointer-events:auto}
+    .node .port.in{left:-8px;right:auto}
+    .mini{font-size:12px;color:var(--muted)}
+    .hint{font-size:12px;color:var(--muted);line-height:1.4}
+    @media (max-width:980px){.app{grid-template-columns:1fr}.sidebar{height:42vh}.stage-wrap{height:58vh}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="hero-card">
-        <h1>Mind map visuelle<br>des serveurs Hostinger</h1>
-        <div class="lead">Vue d’ensemble des <strong>4 serveurs</strong> répartis sur <strong>2 comptes Hostinger</strong>, avec pour chacun les bots présents, leur rôle, les services hébergés et le périmètre business couvert.</div>
-        <div class="chips">
-          <div class="chip">Entrepreneuses Académie / CB360</div>
-          <div class="chip">LABZ Nutrition</div>
-          <div class="chip">AlphaIA</div>
-          <div class="chip">Slack · WhatsApp · N8N · Backend</div>
-        </div>
+<div class="app">
+  <aside class="sidebar">
+    <h1>Hostinger Mind Map Studio</h1>
+    <p>Version éditable façon app de mind mapping : ajoute des cases, change les couleurs, relie les blocs, déplace-les, et exporte la carte en JSON.</p>
+
+    <div class="group toolbar">
+      <button id="addNodeBtn">+ Ajouter une case</button>
+      <button id="addServerTemplateBtn" class="secondary">+ Ajouter un serveur type</button>
+      <button id="exportBtn" class="secondary">Exporter JSON</button>
+      <button id="copyBtn" class="secondary">Copier JSON</button>
+      <button id="resetBtn" class="danger">Réinitialiser la carte</button>
+    </div>
+
+    <div class="group">
+      <h2>Édition de la case</h2>
+      <div class="row"><label>Titre</label><input id="titleInput" type="text" placeholder="Titre" /></div>
+      <div class="row"><label>Sous-titre</label><input id="metaInput" type="text" placeholder="Sous-titre" /></div>
+      <div class="row"><label>Couleur</label><input id="colorInput" type="color" value="#7c3aed" /></div>
+      <div class="row"><label>Texte</label></div>
+      <textarea id="contentInput" placeholder="Contenu, détails, bullets..."></textarea>
+      <div class="row"><button id="saveNodeBtn">Sauvegarder</button><button id="deleteNodeBtn" class="danger">Supprimer</button></div>
+      <div class="hint">Astuce : clique une case pour l’éditer. Glisse-la pour la déplacer.</div>
+    </div>
+
+    <div class="group">
+      <h2>Connexions</h2>
+      <p class="mini">Clique le point de sortie d’une case puis le point d’entrée d’une autre pour créer une ligne.</p>
+      <div class="row"><button id="clearLinksBtn" class="secondary">Supprimer toutes les lignes</button></div>
+    </div>
+
+    <div class="group">
+      <h2>Import / Export</h2>
+      <textarea id="jsonBox" placeholder="Le JSON de la carte apparaît ici à l’export."></textarea>
+      <div class="row"><button id="importBtn" class="secondary">Importer JSON</button></div>
+    </div>
+  </aside>
+
+  <main class="stage-wrap">
+    <div class="topbar">
+      <div class="pillbar">
+        <span class="pill">Éditable</span>
+        <span class="pill">Drag & drop</span>
+        <span class="pill">Couleurs personnalisables</span>
+        <span class="pill">Lignes entre les cases</span>
       </div>
-      <div class="info-card">
-        <h2>Lecture rapide</h2>
-        <p>Le gros point à retenir : <strong>Athéna</strong>, <strong>IRIS</strong>, <strong>Titan</strong> et <strong>Karine SAV</strong> ne sont pas la même architecture. Certains sont des instances OpenClaw, d’autres des bots séparés, et un des serveurs est totalement distinct côté Damien.</p>
-        <div class="kpis">
-          <div class="kpi"><b>4</b><span>serveurs cartographiés</span></div>
-          <div class="kpi"><b>2</b><span>comptes Hostinger</span></div>
-          <div class="kpi"><b>3</b><span>périmètres business principaux</span></div>
-          <div class="kpi"><b>6+</b><span>bots / services structurants</span></div>
-        </div>
+      <div class="pillbar"><span class="pill">Lien live : bodycoach.github.io/hostinger-mindmap</span></div>
+    </div>
+    <div class="canvas">
+      <div class="board" id="board">
+        <svg id="links"></svg>
       </div>
-    </section>
+    </div>
+  </main>
+</div>
 
-    <section class="map hero-card">
-      <div class="mind">
-        <div class="root">Infra Hostinger<br>Antony / Damien</div>
-        <div class="branch">
-          <h3>Compte Hostinger principal</h3>
-          <p>3 serveurs orientés EA / LABZ / AlphaIA.</p>
-          <div class="node ea"><h4>srv1494125 · 72.62.22.25</h4><ul><li>Athéna — OpenClaw Slack EA</li><li>IRIS — bot WhatsApp vocal</li><li>N8N EA — automatisations Entrepreneuses Académie</li></ul></div>
-          <div class="node labz"><h4>srv807991 · 168.231.108.39</h4><ul><li>Titan — OpenClaw Slack LABZ</li><li>N8N + PostgreSQL + Qdrant</li><li>Serveur ops / IA principal LABZ</li></ul></div>
-          <div class="node alpha"><h4>srv1320382 · 187.77.166.26</h4><ul><li>Backend / frontend AlphaIA</li><li>Karine SAV via backend AlphaIA</li><li>N8N AlphaIA</li></ul></div>
-        </div>
-        <div class="branch">
-          <h3>Compte Hostinger secondaire</h3>
-          <p>1 serveur distinct, séparé de l’infra AlphaIA principale.</p>
-          <div class="node damien"><h4>srv774083 · 82.25.115.108</h4><ul><li>N8N distinct côté Damien</li><li>Workflow confirmé : Karine — SAV Drafts</li><li>Automatisation SAV EA spécifique</li></ul></div>
-        </div>
-      </div>
-    </section>
+<script>
+const defaultMap = {
+  nodes: [
+    {id:'root', x:120, y:240, title:'Infra Hostinger\nAntony / Damien', meta:'Vue centrale', color:'#2563eb', content:'2 comptes Hostinger\n4 serveurs\nBots + N8N + backend'},
+    {id:'srv1494125', x:520, y:90, title:'srv1494125', meta:'72.62.22.25 · EA / CB360', color:'#7c3aed', content:'Athéna\nIRIS\nN8N EA'},
+    {id:'srv807991', x:520, y:330, title:'srv807991', meta:'168.231.108.39 · LABZ', color:'#10b981', content:'Titan\nN8N\nPostgreSQL\nQdrant'},
+    {id:'srv1320382', x:520, y:570, title:'srv1320382', meta:'187.77.166.26 · AlphaIA', color:'#f59e0b', content:'AlphaIA backend/frontend\nKarine SAV\nN8N AlphaIA'},
+    {id:'srv774083', x:980, y:330, title:'srv774083', meta:'82.25.115.108 · Damien', color:'#38bdf8', content:'N8N distinct\nKarine — SAV Drafts'}
+  ],
+  links: [
+    {from:'root', to:'srv1494125'},
+    {from:'root', to:'srv807991'},
+    {from:'root', to:'srv1320382'},
+    {from:'root', to:'srv774083'}
+  ]
+};
 
-    <section class="grid">
-      <article class="server ea">
-        <h2>srv1494125</h2>
-        <div class="meta">72.62.22.25 · pôle EA / CB360</div>
-        <div class="badges"><span class="badge b-ea">Athéna</span><span class="badge b-damien">IRIS</span><span class="badge b-alpha">N8N EA</span></div>
-        <div class="cols">
-          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li><b>Athéna</b> : OpenClaw, Slack Team Entrepreneuses Académie, port 18790</li><li><b>IRIS</b> : bot WhatsApp avec STT local et TTS Piper</li><li><b>N8N EA</b> : <code>n8n.entrepreneusesacademie.fr</code></li></ul></div>
-          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Support IA équipe EA</li><li>Interactions vocales WhatsApp</li><li>Automatisations SAV / brouillons / résumés</li><li>Périmètre : Entrepreneuses Académie + CB360</li></ul></div>
-        </div>
-      </article>
+let map = loadMap();
+let selectedId = null;
+let drag = null;
+let linkStart = null;
+const board = document.getElementById('board');
+const linksSvg = document.getElementById('links');
+const titleInput = document.getElementById('titleInput');
+const metaInput = document.getElementById('metaInput');
+const colorInput = document.getElementById('colorInput');
+const contentInput = document.getElementById('contentInput');
+const jsonBox = document.getElementById('jsonBox');
 
-      <article class="server labz">
-        <h2>srv807991</h2>
-        <div class="meta">168.231.108.39 · pôle LABZ</div>
-        <div class="badges"><span class="badge b-labz">Titan</span><span class="badge b-alpha">N8N</span><span class="badge b-labz">PostgreSQL</span><span class="badge b-labz">Qdrant</span></div>
-        <div class="cols">
-          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li><b>Titan</b> : OpenClaw Slack LABZ</li><li>N8N en HTTPS</li><li>PostgreSQL</li><li>Qdrant</li></ul></div>
-          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Assistant IA équipe LABZ</li><li>Automatisations internes</li><li>Socle technique plus “stack produit”</li><li>Patchs Codex spécifiques déjà appliqués</li></ul></div>
-        </div>
-      </article>
+function loadMap(){
+  try{ return JSON.parse(localStorage.getItem('hostingerMindMapV2')) || structuredClone(defaultMap); }
+  catch(e){ return structuredClone(defaultMap); }
+}
+function saveMap(){ localStorage.setItem('hostingerMindMapV2', JSON.stringify(map)); }
+function uid(){ return 'n'+Math.random().toString(36).slice(2,9); }
+function findNode(id){ return map.nodes.find(n=>n.id===id); }
 
-      <article class="server alpha">
-        <h2>srv1320382</h2>
-        <div class="meta">187.77.166.26 · pôle AlphaIA principal</div>
-        <div class="badges"><span class="badge b-alpha">AlphaIA</span><span class="badge b-red">Karine SAV</span><span class="badge b-alpha">N8N AlphaIA</span></div>
-        <div class="cols">
-          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li>Backend / frontend / postgres / redis</li><li><b>Karine SAV</b> branchée via backend AlphaIA</li><li><code>n8n.alphaia.fr</code></li></ul></div>
-          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Infra principale AlphaIA</li><li>Workflows CRM / scraping / campagnes</li><li>Brouillons SAV via bot séparé</li><li>Karine ici ≠ Athéna</li></ul></div>
-        </div>
-      </article>
+function render(){
+  board.querySelectorAll('.node').forEach(n=>n.remove());
+  map.nodes.forEach(node=>{
+    const el=document.createElement('div');
+    el.className='node'+(node.id===selectedId?' selected':'');
+    el.style.left=node.x+'px'; el.style.top=node.y+'px'; el.style.setProperty('--accent', node.color||'#7c3aed');
+    el.dataset.id=node.id;
+    el.innerHTML=`<div class="title">${escapeHtml(node.title).replace(/\n/g,'<br>')}</div><div class="meta">${escapeHtml(node.meta||'')}</div><div class="content">${escapeHtml(node.content||'')}</div><div class="port in" title="Entrée"></div><div class="port out" title="Sortie"></div>`;
+    el.addEventListener('mousedown', onDragStart);
+    el.addEventListener('click', (e)=>{ if(e.target.classList.contains('port')) return; selectNode(node.id); e.stopPropagation(); });
+    el.querySelector('.port.out').addEventListener('click',(e)=>{ linkStart=node.id; e.stopPropagation(); });
+    el.querySelector('.port.in').addEventListener('click',(e)=>{ if(linkStart && linkStart!==node.id){ map.links.push({from:linkStart,to:node.id}); linkStart=null; saveMap(); renderLinks(); } e.stopPropagation(); });
+    board.appendChild(el);
+  });
+  renderLinks();
+  syncEditor();
+}
 
-      <article class="server damien">
-        <h2>srv774083</h2>
-        <div class="meta">82.25.115.108 · serveur distinct Damien</div>
-        <div class="badges"><span class="badge b-damien">N8N distinct</span><span class="badge b-red">SAV EA</span></div>
-        <div class="cols">
-          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li>N8N séparé</li><li>Workflow confirmé : <b>Karine — SAV Drafts</b></li></ul></div>
-          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Automatisation SAV dédiée</li><li>Environnement séparé de l’infra AlphaIA principale</li><li>Espace d’intervention direct côté Damien</li></ul></div>
-        </div>
-      </article>
-    </section>
+function renderLinks(){
+  linksSvg.innerHTML='';
+  linksSvg.setAttribute('width', board.scrollWidth);
+  linksSvg.setAttribute('height', board.scrollHeight);
+  map.links.forEach((link,idx)=>{
+    const a=findNode(link.from), b=findNode(link.to); if(!a||!b) return;
+    const x1=a.x+220, y1=a.y+70, x2=b.x, y2=b.y+70;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const c1=x1+100, c2=x2-100;
+    path.setAttribute('d',`M ${x1} ${y1} C ${c1} ${y1}, ${c2} ${y2}, ${x2} ${y2}`);
+    path.setAttribute('fill','none'); path.setAttribute('stroke','rgba(255,255,255,.7)'); path.setAttribute('stroke-width','3');
+    path.style.cursor='pointer';
+    path.addEventListener('click',()=>{ if(confirm('Supprimer cette ligne ?')){ map.links.splice(idx,1); saveMap(); renderLinks(); }});
+    linksSvg.appendChild(path);
+  });
+}
 
-    <div class="footer">Version visuelle enrichie — focus infra, bots, rôles et séparation des architectures.</div>
-  </div>
+function selectNode(id){ selectedId=id; render(); }
+function syncEditor(){
+  const node=findNode(selectedId);
+  titleInput.value=node?.title||''; metaInput.value=node?.meta||''; colorInput.value=node?.color||'#7c3aed'; contentInput.value=node?.content||'';
+}
+function onDragStart(e){
+  if(e.target.classList.contains('port')) return;
+  const id=e.currentTarget.dataset.id; selectNode(id);
+  const node=findNode(id); const rect=board.getBoundingClientRect();
+  drag={id, offsetX:e.clientX-rect.left-node.x+board.scrollLeft, offsetY:e.clientY-rect.top-node.y+board.scrollTop};
+  document.addEventListener('mousemove', onDragMove); document.addEventListener('mouseup', onDragEnd);
+}
+function onDragMove(e){
+  if(!drag) return; const rect=board.getBoundingClientRect(); const node=findNode(drag.id);
+  node.x=e.clientX-rect.left-drag.offsetX+board.scrollLeft; node.y=e.clientY-rect.top-drag.offsetY+board.scrollTop;
+  render();
+}
+function onDragEnd(){ if(drag){ saveMap(); } drag=null; document.removeEventListener('mousemove', onDragMove); document.removeEventListener('mouseup', onDragEnd); }
+function escapeHtml(s=''){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+board.addEventListener('click', ()=>{ selectedId=null; render(); });
+
+document.getElementById('addNodeBtn').onclick=()=>{ const node={id:uid(),x:200+Math.random()*500,y:120+Math.random()*500,title:'Nouvelle case',meta:'Sous-titre',color:'#7c3aed',content:'Édite-moi'}; map.nodes.push(node); selectedId=node.id; saveMap(); render(); };
+document.getElementById('addServerTemplateBtn').onclick=()=>{ const node={id:uid(),x:240+Math.random()*600,y:140+Math.random()*520,title:'srvXXXXXXX',meta:'IP · périmètre',color:'#38bdf8',content:'Bot(s)\nN8N\nRôle\nNotes'}; map.nodes.push(node); selectedId=node.id; saveMap(); render(); };
+document.getElementById('saveNodeBtn').onclick=()=>{ const n=findNode(selectedId); if(!n) return; n.title=titleInput.value; n.meta=metaInput.value; n.color=colorInput.value; n.content=contentInput.value; saveMap(); render(); };
+document.getElementById('deleteNodeBtn').onclick=()=>{ if(!selectedId) return; map.nodes=map.nodes.filter(n=>n.id!==selectedId); map.links=map.links.filter(l=>l.from!==selectedId && l.to!==selectedId); selectedId=null; saveMap(); render(); };
+document.getElementById('clearLinksBtn').onclick=()=>{ map.links=[]; saveMap(); renderLinks(); };
+document.getElementById('exportBtn').onclick=()=>{ jsonBox.value=JSON.stringify(map,null,2); };
+document.getElementById('copyBtn').onclick=async()=>{ jsonBox.value=JSON.stringify(map,null,2); await navigator.clipboard.writeText(jsonBox.value); alert('JSON copié'); };
+document.getElementById('importBtn').onclick=()=>{ try{ map=JSON.parse(jsonBox.value); saveMap(); selectedId=null; render(); } catch(e){ alert('JSON invalide'); } };
+document.getElementById('resetBtn').onclick=()=>{ if(confirm('Réinitialiser la carte ?')){ map=structuredClone(defaultMap); selectedId=null; saveMap(); render(); } };
+
+render();
+</script>
 </body>
 </html>
