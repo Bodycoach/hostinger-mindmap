@@ -2,22 +2,22 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Hostinger Mind Map Studio</title>
   <style>
     :root{
-      --bg:#09101d;--panel:#10192fcc;--panel2:#0f1730;--line:rgba(255,255,255,.12);--text:#eef4ff;--muted:#9fb0d3;
+      --bg:#09101d;--panel:#10192fcc;--line:rgba(255,255,255,.12);--text:#eef4ff;--muted:#9fb0d3;
       --purple:#7c3aed;--green:#10b981;--orange:#f59e0b;--blue:#38bdf8;--red:#ef4444;
     }
     *{box-sizing:border-box} html,body{margin:0;height:100%}
     body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(124,58,237,.2), transparent 25%),radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 20%),linear-gradient(180deg,#07101e,#0b1426)}
     .app{display:grid;grid-template-columns:320px 1fr;height:100vh}
     .sidebar{background:var(--panel);backdrop-filter:blur(14px);border-right:1px solid var(--line);padding:18px;overflow:auto}
-    .sidebar h1{font-size:26px;line-height:1.05;margin:0 0 10px}.sidebar p{color:var(--muted);font-size:14px;line-height:1.45}
+    .sidebar h1{font-size:24px;line-height:1.05;margin:0 0 10px}.sidebar p{color:var(--muted);font-size:14px;line-height:1.45}
     .group{margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03)}
     .group h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:#cbd5e1;margin:0 0 10px}
     .row{display:flex;gap:8px;align-items:center;margin:8px 0}.row label{font-size:13px;color:var(--muted);min-width:72px}
-    input[type="text"], textarea, select{width:100%;background:#0b1326;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;font:inherit}
+    input[type="text"], textarea{width:100%;background:#0b1326;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;font:inherit}
     textarea{min-height:100px;resize:vertical}
     input[type="color"]{width:46px;height:38px;border:none;background:transparent;padding:0}
     button{border:none;border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer;background:#1d4ed8;color:white}
@@ -25,11 +25,12 @@
     button.danger{background:#7f1d1d}
     .toolbar{display:grid;gap:8px}
     .stage-wrap{position:relative;overflow:hidden}
-    .topbar{position:absolute;top:16px;left:16px;right:16px;z-index:20;display:flex;justify-content:space-between;gap:12px;align-items:center}
-    .pillbar{display:flex;gap:8px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:16px;backdrop-filter:blur(10px)}
+    .topbar{position:absolute;top:12px;left:12px;right:12px;z-index:20;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;pointer-events:none}
+    .topbar > *{pointer-events:auto}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:16px;backdrop-filter:blur(10px);max-width:100%}
     .pill{padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:#dbe7ff;background:rgba(255,255,255,.04)}
-    .canvas{position:absolute;inset:0;overflow:auto;padding:90px 40px 40px}
-    .board{position:relative;min-width:1800px;min-height:1100px;background-image:radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);background-size:24px 24px}
+    .canvas{position:absolute;inset:0;overflow:auto;padding:84px 18px 18px}
+    .board{position:relative;min-width:1800px;min-height:1100px;background-image:radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);background-size:24px 24px;border-radius:24px}
     svg#links{position:absolute;inset:0;pointer-events:none;overflow:visible}
     .node{position:absolute;min-width:220px;max-width:320px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid var(--line);border-left:5px solid var(--accent,#7c3aed);border-radius:20px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,.25);cursor:move;user-select:none}
     .node.selected{outline:2px solid #fff;box-shadow:0 0 0 4px rgba(255,255,255,.12),0 16px 40px rgba(0,0,0,.3)}
@@ -38,16 +39,31 @@
     .node .content{font-size:13px;color:#d9e3ff;line-height:1.45;white-space:pre-wrap}
     .node .port{position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:999px;background:var(--accent,#7c3aed);border:2px solid white;cursor:crosshair;pointer-events:auto}
     .node .port.in{left:-8px;right:auto}
-    .mini{font-size:12px;color:var(--muted)}
-    .hint{font-size:12px;color:var(--muted);line-height:1.4}
-    @media (max-width:980px){.app{grid-template-columns:1fr}.sidebar{height:42vh}.stage-wrap{height:58vh}}
+    .mini,.hint{font-size:12px;color:var(--muted);line-height:1.4}
+    .status{font-size:12px;color:#bbf7d0;margin-top:8px}
+    .mobile-toggle{display:none;position:fixed;left:12px;bottom:12px;z-index:50;border-radius:999px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .sidebar-close{display:none}
+    @media (max-width:980px){
+      .app{display:block;height:auto;min-height:100vh}
+      .sidebar{position:fixed;inset:0 auto 0 0;width:min(88vw,360px);z-index:60;transform:translateX(-100%);transition:.25s ease;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+      .sidebar.open{transform:translateX(0)}
+      .sidebar-close{display:block;margin-bottom:10px}
+      .stage-wrap{height:100vh}
+      .mobile-toggle{display:block}
+      .topbar{left:10px;right:10px;top:10px;flex-direction:column;align-items:flex-start}
+      .pillbar{max-width:calc(100vw - 20px)}
+      .canvas{padding-top:110px}
+      .board{min-width:1200px;min-height:1600px}
+      .node{min-width:200px;max-width:260px}
+    }
   </style>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-close secondary" id="closeSidebarBtn">Fermer</button>
     <h1>Hostinger Mind Map Studio</h1>
-    <p>Version éditable façon app de mind mapping : ajoute des cases, change les couleurs, relie les blocs, déplace-les, et exporte la carte en JSON.</p>
+    <p>Mini app éditable. Les changements sont bien sauvegardés <strong>en local dans ton navigateur</strong>. Pour que <strong>je voie aussi</strong> les modifs sans ambiguïté, tu peux utiliser <strong>Exporter JSON</strong> puis me le renvoyer, ou je peux ensuite brancher un vrai backend partagé.</p>
 
     <div class="group toolbar">
       <button id="addNodeBtn">+ Ajouter une case</button>
@@ -55,6 +71,7 @@
       <button id="exportBtn" class="secondary">Exporter JSON</button>
       <button id="copyBtn" class="secondary">Copier JSON</button>
       <button id="resetBtn" class="danger">Réinitialiser la carte</button>
+      <div class="status" id="saveStatus">Sauvegarde locale active</div>
     </div>
 
     <div class="group">
@@ -65,7 +82,7 @@
       <div class="row"><label>Texte</label></div>
       <textarea id="contentInput" placeholder="Contenu, détails, bullets..."></textarea>
       <div class="row"><button id="saveNodeBtn">Sauvegarder</button><button id="deleteNodeBtn" class="danger">Supprimer</button></div>
-      <div class="hint">Astuce : clique une case pour l’éditer. Glisse-la pour la déplacer.</div>
+      <div class="hint">Clique une case pour l’éditer. Glisse-la pour la déplacer. Sur mobile : ouvre le menu, édite, puis ferme le panneau.</div>
     </div>
 
     <div class="group">
@@ -78,16 +95,19 @@
       <h2>Import / Export</h2>
       <textarea id="jsonBox" placeholder="Le JSON de la carte apparaît ici à l’export."></textarea>
       <div class="row"><button id="importBtn" class="secondary">Importer JSON</button></div>
+      <div class="hint">Important : aujourd’hui la carte est persistée localement côté navigateur/mobile. Si tu veux une synchro partagée temps réel, je te ferai ensuite une vraie couche serveur.</div>
     </div>
   </aside>
 
   <main class="stage-wrap">
+    <button class="mobile-toggle" id="openSidebarBtn">☰ Éditer</button>
     <div class="topbar">
       <div class="pillbar">
         <span class="pill">Éditable</span>
         <span class="pill">Drag & drop</span>
         <span class="pill">Couleurs personnalisables</span>
         <span class="pill">Lignes entre les cases</span>
+        <span class="pill">Mobile friendly</span>
       </div>
       <div class="pillbar"><span class="pill">Lien live : bodycoach.github.io/hostinger-mindmap</span></div>
     </div>
@@ -100,109 +120,36 @@
 </div>
 
 <script>
-const defaultMap = {
-  nodes: [
-    {id:'root', x:120, y:240, title:'Infra Hostinger\nAntony / Damien', meta:'Vue centrale', color:'#2563eb', content:'2 comptes Hostinger\n4 serveurs\nBots + N8N + backend'},
-    {id:'srv1494125', x:520, y:90, title:'srv1494125', meta:'72.62.22.25 · EA / CB360', color:'#7c3aed', content:'Athéna\nIRIS\nN8N EA'},
-    {id:'srv807991', x:520, y:330, title:'srv807991', meta:'168.231.108.39 · LABZ', color:'#10b981', content:'Titan\nN8N\nPostgreSQL\nQdrant'},
-    {id:'srv1320382', x:520, y:570, title:'srv1320382', meta:'187.77.166.26 · AlphaIA', color:'#f59e0b', content:'AlphaIA backend/frontend\nKarine SAV\nN8N AlphaIA'},
-    {id:'srv774083', x:980, y:330, title:'srv774083', meta:'82.25.115.108 · Damien', color:'#38bdf8', content:'N8N distinct\nKarine — SAV Drafts'}
-  ],
-  links: [
-    {from:'root', to:'srv1494125'},
-    {from:'root', to:'srv807991'},
-    {from:'root', to:'srv1320382'},
-    {from:'root', to:'srv774083'}
-  ]
-};
-
-let map = loadMap();
-let selectedId = null;
-let drag = null;
-let linkStart = null;
-const board = document.getElementById('board');
-const linksSvg = document.getElementById('links');
-const titleInput = document.getElementById('titleInput');
-const metaInput = document.getElementById('metaInput');
-const colorInput = document.getElementById('colorInput');
-const contentInput = document.getElementById('contentInput');
-const jsonBox = document.getElementById('jsonBox');
-
-function loadMap(){
-  try{ return JSON.parse(localStorage.getItem('hostingerMindMapV2')) || structuredClone(defaultMap); }
-  catch(e){ return structuredClone(defaultMap); }
-}
-function saveMap(){ localStorage.setItem('hostingerMindMapV2', JSON.stringify(map)); }
-function uid(){ return 'n'+Math.random().toString(36).slice(2,9); }
-function findNode(id){ return map.nodes.find(n=>n.id===id); }
-
-function render(){
-  board.querySelectorAll('.node').forEach(n=>n.remove());
-  map.nodes.forEach(node=>{
-    const el=document.createElement('div');
-    el.className='node'+(node.id===selectedId?' selected':'');
-    el.style.left=node.x+'px'; el.style.top=node.y+'px'; el.style.setProperty('--accent', node.color||'#7c3aed');
-    el.dataset.id=node.id;
-    el.innerHTML=`<div class="title">${escapeHtml(node.title).replace(/\n/g,'<br>')}</div><div class="meta">${escapeHtml(node.meta||'')}</div><div class="content">${escapeHtml(node.content||'')}</div><div class="port in" title="Entrée"></div><div class="port out" title="Sortie"></div>`;
-    el.addEventListener('mousedown', onDragStart);
-    el.addEventListener('click', (e)=>{ if(e.target.classList.contains('port')) return; selectNode(node.id); e.stopPropagation(); });
-    el.querySelector('.port.out').addEventListener('click',(e)=>{ linkStart=node.id; e.stopPropagation(); });
-    el.querySelector('.port.in').addEventListener('click',(e)=>{ if(linkStart && linkStart!==node.id){ map.links.push({from:linkStart,to:node.id}); linkStart=null; saveMap(); renderLinks(); } e.stopPropagation(); });
-    board.appendChild(el);
-  });
-  renderLinks();
-  syncEditor();
-}
-
-function renderLinks(){
-  linksSvg.innerHTML='';
-  linksSvg.setAttribute('width', board.scrollWidth);
-  linksSvg.setAttribute('height', board.scrollHeight);
-  map.links.forEach((link,idx)=>{
-    const a=findNode(link.from), b=findNode(link.to); if(!a||!b) return;
-    const x1=a.x+220, y1=a.y+70, x2=b.x, y2=b.y+70;
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    const c1=x1+100, c2=x2-100;
-    path.setAttribute('d',`M ${x1} ${y1} C ${c1} ${y1}, ${c2} ${y2}, ${x2} ${y2}`);
-    path.setAttribute('fill','none'); path.setAttribute('stroke','rgba(255,255,255,.7)'); path.setAttribute('stroke-width','3');
-    path.style.cursor='pointer';
-    path.addEventListener('click',()=>{ if(confirm('Supprimer cette ligne ?')){ map.links.splice(idx,1); saveMap(); renderLinks(); }});
-    linksSvg.appendChild(path);
-  });
-}
-
-function selectNode(id){ selectedId=id; render(); }
-function syncEditor(){
-  const node=findNode(selectedId);
-  titleInput.value=node?.title||''; metaInput.value=node?.meta||''; colorInput.value=node?.color||'#7c3aed'; contentInput.value=node?.content||'';
-}
-function onDragStart(e){
-  if(e.target.classList.contains('port')) return;
-  const id=e.currentTarget.dataset.id; selectNode(id);
-  const node=findNode(id); const rect=board.getBoundingClientRect();
-  drag={id, offsetX:e.clientX-rect.left-node.x+board.scrollLeft, offsetY:e.clientY-rect.top-node.y+board.scrollTop};
-  document.addEventListener('mousemove', onDragMove); document.addEventListener('mouseup', onDragEnd);
-}
-function onDragMove(e){
-  if(!drag) return; const rect=board.getBoundingClientRect(); const node=findNode(drag.id);
-  node.x=e.clientX-rect.left-drag.offsetX+board.scrollLeft; node.y=e.clientY-rect.top-drag.offsetY+board.scrollTop;
-  render();
-}
-function onDragEnd(){ if(drag){ saveMap(); } drag=null; document.removeEventListener('mousemove', onDragMove); document.removeEventListener('mouseup', onDragEnd); }
-function escapeHtml(s=''){ return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-board.addEventListener('click', ()=>{ selectedId=null; render(); });
-
-document.getElementById('addNodeBtn').onclick=()=>{ const node={id:uid(),x:200+Math.random()*500,y:120+Math.random()*500,title:'Nouvelle case',meta:'Sous-titre',color:'#7c3aed',content:'Édite-moi'}; map.nodes.push(node); selectedId=node.id; saveMap(); render(); };
-document.getElementById('addServerTemplateBtn').onclick=()=>{ const node={id:uid(),x:240+Math.random()*600,y:140+Math.random()*520,title:'srvXXXXXXX',meta:'IP · périmètre',color:'#38bdf8',content:'Bot(s)\nN8N\nRôle\nNotes'}; map.nodes.push(node); selectedId=node.id; saveMap(); render(); };
-document.getElementById('saveNodeBtn').onclick=()=>{ const n=findNode(selectedId); if(!n) return; n.title=titleInput.value; n.meta=metaInput.value; n.color=colorInput.value; n.content=contentInput.value; saveMap(); render(); };
-document.getElementById('deleteNodeBtn').onclick=()=>{ if(!selectedId) return; map.nodes=map.nodes.filter(n=>n.id!==selectedId); map.links=map.links.filter(l=>l.from!==selectedId && l.to!==selectedId); selectedId=null; saveMap(); render(); };
-document.getElementById('clearLinksBtn').onclick=()=>{ map.links=[]; saveMap(); renderLinks(); };
-document.getElementById('exportBtn').onclick=()=>{ jsonBox.value=JSON.stringify(map,null,2); };
-document.getElementById('copyBtn').onclick=async()=>{ jsonBox.value=JSON.stringify(map,null,2); await navigator.clipboard.writeText(jsonBox.value); alert('JSON copié'); };
-document.getElementById('importBtn').onclick=()=>{ try{ map=JSON.parse(jsonBox.value); saveMap(); selectedId=null; render(); } catch(e){ alert('JSON invalide'); } };
-document.getElementById('resetBtn').onclick=()=>{ if(confirm('Réinitialiser la carte ?')){ map=structuredClone(defaultMap); selectedId=null; saveMap(); render(); } };
-
+const defaultMap = {nodes:[{id:'root',x:120,y:240,title:'Infra Hostinger\nAntony / Damien',meta:'Vue centrale',color:'#2563eb',content:'2 comptes Hostinger\n4 serveurs\nBots + N8N + backend'},{id:'srv1494125',x:520,y:90,title:'srv1494125',meta:'72.62.22.25 · EA / CB360',color:'#7c3aed',content:'Athéna\nIRIS\nN8N EA'},{id:'srv807991',x:520,y:330,title:'srv807991',meta:'168.231.108.39 · LABZ',color:'#10b981',content:'Titan\nN8N\nPostgreSQL\nQdrant'},{id:'srv1320382',x:520,y:570,title:'srv1320382',meta:'187.77.166.26 · AlphaIA',color:'#f59e0b',content:'AlphaIA backend/frontend\nKarine SAV\nN8N AlphaIA'},{id:'srv774083',x:980,y:330,title:'srv774083',meta:'82.25.115.108 · Damien',color:'#38bdf8',content:'N8N distinct\nKarine — SAV Drafts'}],links:[{from:'root',to:'srv1494125'},{from:'root',to:'srv807991'},{from:'root',to:'srv1320382'},{from:'root',to:'srv774083'}]};
+let map=loadMap(),selectedId=null,drag=null,linkStart=null;
+const board=document.getElementById('board'),linksSvg=document.getElementById('links'),titleInput=document.getElementById('titleInput'),metaInput=document.getElementById('metaInput'),colorInput=document.getElementById('colorInput'),contentInput=document.getElementById('contentInput'),jsonBox=document.getElementById('jsonBox'),saveStatus=document.getElementById('saveStatus'),sidebar=document.getElementById('sidebar');
+function loadMap(){try{return JSON.parse(localStorage.getItem('hostingerMindMapV3'))||structuredClone(defaultMap)}catch(e){return structuredClone(defaultMap)}}
+function saveMap(){localStorage.setItem('hostingerMindMapV3',JSON.stringify(map));saveStatus.textContent='Sauvegardé localement · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function uid(){return 'n'+Math.random().toString(36).slice(2,9)}
+function findNode(id){return map.nodes.find(n=>n.id===id)}
+function escapeHtml(s=''){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){board.querySelectorAll('.node').forEach(n=>n.remove());map.nodes.forEach(node=>{const el=document.createElement('div');el.className='node'+(node.id===selectedId?' selected':'');el.style.left=node.x+'px';el.style.top=node.y+'px';el.style.setProperty('--accent',node.color||'#7c3aed');el.dataset.id=node.id;el.innerHTML=`<div class="title">${escapeHtml(node.title).replace(/\n/g,'<br>')}</div><div class="meta">${escapeHtml(node.meta||'')}</div><div class="content">${escapeHtml(node.content||'')}</div><div class="port in" title="Entrée"></div><div class="port out" title="Sortie"></div>`;el.addEventListener('mousedown',onDragStart);el.addEventListener('touchstart',onTouchStart,{passive:false});el.addEventListener('click',e=>{if(e.target.classList.contains('port'))return;selectNode(node.id);e.stopPropagation()});el.querySelector('.port.out').addEventListener('click',e=>{linkStart=node.id;e.stopPropagation()});el.querySelector('.port.in').addEventListener('click',e=>{if(linkStart&&linkStart!==node.id){map.links.push({from:linkStart,to:node.id});linkStart=null;saveMap();renderLinks()}e.stopPropagation()});board.appendChild(el)});renderLinks();syncEditor()}
+function renderLinks(){linksSvg.innerHTML='';linksSvg.setAttribute('width',board.scrollWidth);linksSvg.setAttribute('height',board.scrollHeight);map.links.forEach((link,idx)=>{const a=findNode(link.from),b=findNode(link.to);if(!a||!b)return;const x1=a.x+220,y1=a.y+70,x2=b.x,y2=b.y+70,c1=x1+100,c2=x2-100;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M ${x1} ${y1} C ${c1} ${y1}, ${c2} ${y2}, ${x2} ${y2}`);path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.75)');path.setAttribute('stroke-width','3');path.style.pointerEvents='auto';path.style.cursor='pointer';path.addEventListener('click',()=>{if(confirm('Supprimer cette ligne ?')){map.links.splice(idx,1);saveMap();renderLinks()}});linksSvg.appendChild(path)})}
+function selectNode(id){selectedId=id;render()}
+function syncEditor(){const node=findNode(selectedId);titleInput.value=node?.title||'';metaInput.value=node?.meta||'';colorInput.value=node?.color||'#7c3aed';contentInput.value=node?.content||''}
+function onDragStart(e){if(e.target.classList.contains('port'))return;const id=e.currentTarget.dataset.id;selectNode(id);const node=findNode(id),rect=board.getBoundingClientRect();drag={id,offsetX:e.clientX-rect.left-node.x+board.scrollLeft,offsetY:e.clientY-rect.top-node.y+board.scrollTop};document.addEventListener('mousemove',onDragMove);document.addEventListener('mouseup',onDragEnd)}
+function onDragMove(e){if(!drag)return;const rect=board.getBoundingClientRect(),node=findNode(drag.id);node.x=e.clientX-rect.left-drag.offsetX+board.scrollLeft;node.y=e.clientY-rect.top-drag.offsetY+board.scrollTop;render()}
+function onDragEnd(){if(drag)saveMap();drag=null;document.removeEventListener('mousemove',onDragMove);document.removeEventListener('mouseup',onDragEnd)}
+function onTouchStart(e){if(e.target.classList.contains('port'))return;e.preventDefault();const touch=e.touches[0],id=e.currentTarget.dataset.id;selectNode(id);const node=findNode(id),rect=board.getBoundingClientRect();drag={id,offsetX:touch.clientX-rect.left-node.x+board.scrollLeft,offsetY:touch.clientY-rect.top-node.y+board.scrollTop};document.addEventListener('touchmove',onTouchMove,{passive:false});document.addEventListener('touchend',onTouchEnd)}
+function onTouchMove(e){if(!drag)return;e.preventDefault();const touch=e.touches[0],rect=board.getBoundingClientRect(),node=findNode(drag.id);node.x=touch.clientX-rect.left-drag.offsetX+board.scrollLeft;node.y=touch.clientY-rect.top-drag.offsetY+board.scrollTop;render()}
+function onTouchEnd(){if(drag)saveMap();drag=null;document.removeEventListener('touchmove',onTouchMove);document.removeEventListener('touchend',onTouchEnd)}
+board.addEventListener('click',()=>{selectedId=null;render()});
+document.getElementById('addNodeBtn').onclick=()=>{const node={id:uid(),x:200+Math.random()*500,y:120+Math.random()*500,title:'Nouvelle case',meta:'Sous-titre',color:'#7c3aed',content:'Édite-moi'};map.nodes.push(node);selectedId=node.id;saveMap();render()};
+document.getElementById('addServerTemplateBtn').onclick=()=>{const node={id:uid(),x:240+Math.random()*600,y:140+Math.random()*520,title:'srvXXXXXXX',meta:'IP · périmètre',color:'#38bdf8',content:'Bot(s)\nN8N\nRôle\nNotes'};map.nodes.push(node);selectedId=node.id;saveMap();render()};
+document.getElementById('saveNodeBtn').onclick=()=>{const n=findNode(selectedId);if(!n)return;n.title=titleInput.value;n.meta=metaInput.value;n.color=colorInput.value;n.content=contentInput.value;saveMap();render()};
+document.getElementById('deleteNodeBtn').onclick=()=>{if(!selectedId)return;map.nodes=map.nodes.filter(n=>n.id!==selectedId);map.links=map.links.filter(l=>l.from!==selectedId&&l.to!==selectedId);selectedId=null;saveMap();render()};
+document.getElementById('clearLinksBtn').onclick=()=>{map.links=[];saveMap();renderLinks()};
+document.getElementById('exportBtn').onclick=()=>{jsonBox.value=JSON.stringify(map,null,2)};
+document.getElementById('copyBtn').onclick=async()=>{jsonBox.value=JSON.stringify(map,null,2);await navigator.clipboard.writeText(jsonBox.value);alert('JSON copié')};
+document.getElementById('importBtn').onclick=()=>{try{map=JSON.parse(jsonBox.value);saveMap();selectedId=null;render()}catch(e){alert('JSON invalide')}};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser la carte ?')){map=structuredClone(defaultMap);selectedId=null;saveMap();render()}};
+document.getElementById('openSidebarBtn').onclick=()=>sidebar.classList.add('open');
+document.getElementById('closeSidebarBtn').onclick=()=>sidebar.classList.remove('open');
 render();
 </script>
 </body>
