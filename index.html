@@ -63,15 +63,16 @@
   <aside class="sidebar" id="sidebar">
     <button class="sidebar-close secondary" id="closeSidebarBtn">Fermer</button>
     <h1>Hostinger Mind Map Studio</h1>
-    <p>Mini app éditable. Les changements sont bien sauvegardés <strong>en local dans ton navigateur</strong>. Pour que <strong>je voie aussi</strong> les modifs sans ambiguïté, tu peux utiliser <strong>Exporter JSON</strong> puis me le renvoyer, ou je peux ensuite brancher un vrai backend partagé.</p>
+    <p>Mini app éditable avec <strong>sauvegarde locale + sauvegarde partagée distante</strong>. Donc les modifs peuvent remonter entre mobile et desktop, et je peux relire l’état partagé si besoin.</p>
 
     <div class="group toolbar">
       <button id="addNodeBtn">+ Ajouter une case</button>
       <button id="addServerTemplateBtn" class="secondary">+ Ajouter un serveur type</button>
       <button id="exportBtn" class="secondary">Exporter JSON</button>
       <button id="copyBtn" class="secondary">Copier JSON</button>
+      <button id="syncNowBtn" class="secondary">Forcer la synchro</button>
       <button id="resetBtn" class="danger">Réinitialiser la carte</button>
-      <div class="status" id="saveStatus">Sauvegarde locale active</div>
+      <div class="status" id="saveStatus">Initialisation de la synchro…</div>
     </div>
 
     <div class="group">
@@ -95,7 +96,7 @@
       <h2>Import / Export</h2>
       <textarea id="jsonBox" placeholder="Le JSON de la carte apparaît ici à l’export."></textarea>
       <div class="row"><button id="importBtn" class="secondary">Importer JSON</button></div>
-      <div class="hint">Important : aujourd’hui la carte est persistée localement côté navigateur/mobile. Si tu veux une synchro partagée temps réel, je te ferai ensuite une vraie couche serveur.</div>
+      <div class="hint">La carte est persistée en local et poussée vers un stockage partagé léger. En cas de conflit, la dernière sauvegarde distante récupérée est appliquée.</div>
     </div>
   </aside>
 
@@ -121,36 +122,48 @@
 
 <script>
 const defaultMap = {nodes:[{id:'root',x:120,y:240,title:'Infra Hostinger\nAntony / Damien',meta:'Vue centrale',color:'#2563eb',content:'2 comptes Hostinger\n4 serveurs\nBots + N8N + backend'},{id:'srv1494125',x:520,y:90,title:'srv1494125',meta:'72.62.22.25 · EA / CB360',color:'#7c3aed',content:'Athéna\nIRIS\nN8N EA'},{id:'srv807991',x:520,y:330,title:'srv807991',meta:'168.231.108.39 · LABZ',color:'#10b981',content:'Titan\nN8N\nPostgreSQL\nQdrant'},{id:'srv1320382',x:520,y:570,title:'srv1320382',meta:'187.77.166.26 · AlphaIA',color:'#f59e0b',content:'AlphaIA backend/frontend\nKarine SAV\nN8N AlphaIA'},{id:'srv774083',x:980,y:330,title:'srv774083',meta:'82.25.115.108 · Damien',color:'#38bdf8',content:'N8N distinct\nKarine — SAV Drafts'}],links:[{from:'root',to:'srv1494125'},{from:'root',to:'srv807991'},{from:'root',to:'srv1320382'},{from:'root',to:'srv774083'}]};
-let map=loadMap(),selectedId=null,drag=null,linkStart=null;
+const STORAGE_KEY='hostingerMindMapV4';
+const SHARED_EVENT_TYPE='hostinger-mindmap-v4';
+const SHARED_SAVE_URL='https://webhook.site/3394719a-4e8d-4095-aafc-0345196a0fd7';
+const SHARED_LOAD_URL='https://webhook.site/token/3394719a-4e8d-4095-aafc-0345196a0fd7/requests?sorting=newest&per_page=20';
+let map=loadMap(),selectedId=null,drag=null,linkStart=null,remoteSyncTimer=null,lastRemoteAppliedAt='';
 const board=document.getElementById('board'),linksSvg=document.getElementById('links'),titleInput=document.getElementById('titleInput'),metaInput=document.getElementById('metaInput'),colorInput=document.getElementById('colorInput'),contentInput=document.getElementById('contentInput'),jsonBox=document.getElementById('jsonBox'),saveStatus=document.getElementById('saveStatus'),sidebar=document.getElementById('sidebar');
-function loadMap(){try{return JSON.parse(localStorage.getItem('hostingerMindMapV3'))||structuredClone(defaultMap)}catch(e){return structuredClone(defaultMap)}}
-function saveMap(){localStorage.setItem('hostingerMindMapV3',JSON.stringify(map));saveStatus.textContent='Sauvegardé localement · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function loadMap(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||structuredClone(defaultMap)}catch(e){return structuredClone(defaultMap)}}
+function setStatus(text, ok=true){saveStatus.textContent=text;saveStatus.style.color=ok?'#bbf7d0':'#fecaca'}
+function saveMapLocal(){localStorage.setItem(STORAGE_KEY,JSON.stringify(map));setStatus('Sauvegardé en local · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}))}
+async function saveMap(shared=true){saveMapLocal();if(!shared)return false;try{await fetch(SHARED_SAVE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:SHARED_EVENT_TYPE,savedAt:new Date().toISOString(),map})});setStatus('Sauvegardé localement + partagé · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));return true}catch(e){setStatus('Sauvegardé localement, synchro distante en attente',false);return false}}
+async function loadRemoteMap(){try{const res=await fetch(SHARED_LOAD_URL);const data=await res.json();const hit=(data.data||[]).find(req=>{try{const body=JSON.parse(req.content||'{}');return body.type===SHARED_EVENT_TYPE&&body.map}catch(e){return false}});if(!hit) return false;const body=JSON.parse(hit.content);if(body.savedAt && body.savedAt===lastRemoteAppliedAt) return false;map=body.map;lastRemoteAppliedAt=body.savedAt||'';localStorage.setItem(STORAGE_KEY,JSON.stringify(map));setStatus('Carte partagée chargée · '+new Date(body.savedAt||Date.now()).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));render();return true}catch(e){setStatus('Mode local actif, synchro distante indisponible',false);return false}}
+function scheduleSharedSave(){clearTimeout(remoteSyncTimer);remoteSyncTimer=setTimeout(()=>saveMap(true),700)}
 function uid(){return 'n'+Math.random().toString(36).slice(2,9)}
 function findNode(id){return map.nodes.find(n=>n.id===id)}
 function escapeHtml(s=''){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function render(){board.querySelectorAll('.node').forEach(n=>n.remove());map.nodes.forEach(node=>{const el=document.createElement('div');el.className='node'+(node.id===selectedId?' selected':'');el.style.left=node.x+'px';el.style.top=node.y+'px';el.style.setProperty('--accent',node.color||'#7c3aed');el.dataset.id=node.id;el.innerHTML=`<div class="title">${escapeHtml(node.title).replace(/\n/g,'<br>')}</div><div class="meta">${escapeHtml(node.meta||'')}</div><div class="content">${escapeHtml(node.content||'')}</div><div class="port in" title="Entrée"></div><div class="port out" title="Sortie"></div>`;el.addEventListener('mousedown',onDragStart);el.addEventListener('touchstart',onTouchStart,{passive:false});el.addEventListener('click',e=>{if(e.target.classList.contains('port'))return;selectNode(node.id);e.stopPropagation()});el.querySelector('.port.out').addEventListener('click',e=>{linkStart=node.id;e.stopPropagation()});el.querySelector('.port.in').addEventListener('click',e=>{if(linkStart&&linkStart!==node.id){map.links.push({from:linkStart,to:node.id});linkStart=null;saveMap();renderLinks()}e.stopPropagation()});board.appendChild(el)});renderLinks();syncEditor()}
-function renderLinks(){linksSvg.innerHTML='';linksSvg.setAttribute('width',board.scrollWidth);linksSvg.setAttribute('height',board.scrollHeight);map.links.forEach((link,idx)=>{const a=findNode(link.from),b=findNode(link.to);if(!a||!b)return;const x1=a.x+220,y1=a.y+70,x2=b.x,y2=b.y+70,c1=x1+100,c2=x2-100;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M ${x1} ${y1} C ${c1} ${y1}, ${c2} ${y2}, ${x2} ${y2}`);path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.75)');path.setAttribute('stroke-width','3');path.style.pointerEvents='auto';path.style.cursor='pointer';path.addEventListener('click',()=>{if(confirm('Supprimer cette ligne ?')){map.links.splice(idx,1);saveMap();renderLinks()}});linksSvg.appendChild(path)})}
+function render(){board.querySelectorAll('.node').forEach(n=>n.remove());map.nodes.forEach(node=>{const el=document.createElement('div');el.className='node'+(node.id===selectedId?' selected':'');el.style.left=node.x+'px';el.style.top=node.y+'px';el.style.setProperty('--accent',node.color||'#7c3aed');el.dataset.id=node.id;el.innerHTML=`<div class="title">${escapeHtml(node.title).replace(/\n/g,'<br>')}</div><div class="meta">${escapeHtml(node.meta||'')}</div><div class="content">${escapeHtml(node.content||'')}</div><div class="port in" title="Entrée"></div><div class="port out" title="Sortie"></div>`;el.addEventListener('mousedown',onDragStart);el.addEventListener('touchstart',onTouchStart,{passive:false});el.addEventListener('click',e=>{if(e.target.classList.contains('port'))return;selectNode(node.id);e.stopPropagation()});el.querySelector('.port.out').addEventListener('click',e=>{linkStart=node.id;e.stopPropagation()});el.querySelector('.port.in').addEventListener('click',e=>{if(linkStart&&linkStart!==node.id){map.links.push({from:linkStart,to:node.id});linkStart=null;saveMapLocal();scheduleSharedSave();renderLinks()}e.stopPropagation()});board.appendChild(el)});renderLinks();syncEditor()}
+function renderLinks(){linksSvg.innerHTML='';linksSvg.setAttribute('width',board.scrollWidth);linksSvg.setAttribute('height',board.scrollHeight);map.links.forEach((link,idx)=>{const a=findNode(link.from),b=findNode(link.to);if(!a||!b)return;const x1=a.x+220,y1=a.y+70,x2=b.x,y2=b.y+70,c1=x1+100,c2=x2-100;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M ${x1} ${y1} C ${c1} ${y1}, ${c2} ${y2}, ${x2} ${y2}`);path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.75)');path.setAttribute('stroke-width','3');path.style.pointerEvents='auto';path.style.cursor='pointer';path.addEventListener('click',()=>{if(confirm('Supprimer cette ligne ?')){map.links.splice(idx,1);saveMapLocal();scheduleSharedSave();renderLinks()}});linksSvg.appendChild(path)})}
 function selectNode(id){selectedId=id;render()}
 function syncEditor(){const node=findNode(selectedId);titleInput.value=node?.title||'';metaInput.value=node?.meta||'';colorInput.value=node?.color||'#7c3aed';contentInput.value=node?.content||''}
 function onDragStart(e){if(e.target.classList.contains('port'))return;const id=e.currentTarget.dataset.id;selectNode(id);const node=findNode(id),rect=board.getBoundingClientRect();drag={id,offsetX:e.clientX-rect.left-node.x+board.scrollLeft,offsetY:e.clientY-rect.top-node.y+board.scrollTop};document.addEventListener('mousemove',onDragMove);document.addEventListener('mouseup',onDragEnd)}
 function onDragMove(e){if(!drag)return;const rect=board.getBoundingClientRect(),node=findNode(drag.id);node.x=e.clientX-rect.left-drag.offsetX+board.scrollLeft;node.y=e.clientY-rect.top-drag.offsetY+board.scrollTop;render()}
-function onDragEnd(){if(drag)saveMap();drag=null;document.removeEventListener('mousemove',onDragMove);document.removeEventListener('mouseup',onDragEnd)}
+function onDragEnd(){if(drag)scheduleSharedSave();drag=null;document.removeEventListener('mousemove',onDragMove);document.removeEventListener('mouseup',onDragEnd)}
 function onTouchStart(e){if(e.target.classList.contains('port'))return;e.preventDefault();const touch=e.touches[0],id=e.currentTarget.dataset.id;selectNode(id);const node=findNode(id),rect=board.getBoundingClientRect();drag={id,offsetX:touch.clientX-rect.left-node.x+board.scrollLeft,offsetY:touch.clientY-rect.top-node.y+board.scrollTop};document.addEventListener('touchmove',onTouchMove,{passive:false});document.addEventListener('touchend',onTouchEnd)}
 function onTouchMove(e){if(!drag)return;e.preventDefault();const touch=e.touches[0],rect=board.getBoundingClientRect(),node=findNode(drag.id);node.x=touch.clientX-rect.left-drag.offsetX+board.scrollLeft;node.y=touch.clientY-rect.top-drag.offsetY+board.scrollTop;render()}
-function onTouchEnd(){if(drag)saveMap();drag=null;document.removeEventListener('touchmove',onTouchMove);document.removeEventListener('touchend',onTouchEnd)}
+function onTouchEnd(){if(drag)scheduleSharedSave();drag=null;document.removeEventListener('touchmove',onTouchMove);document.removeEventListener('touchend',onTouchEnd)}
 board.addEventListener('click',()=>{selectedId=null;render()});
-document.getElementById('addNodeBtn').onclick=()=>{const node={id:uid(),x:200+Math.random()*500,y:120+Math.random()*500,title:'Nouvelle case',meta:'Sous-titre',color:'#7c3aed',content:'Édite-moi'};map.nodes.push(node);selectedId=node.id;saveMap();render()};
-document.getElementById('addServerTemplateBtn').onclick=()=>{const node={id:uid(),x:240+Math.random()*600,y:140+Math.random()*520,title:'srvXXXXXXX',meta:'IP · périmètre',color:'#38bdf8',content:'Bot(s)\nN8N\nRôle\nNotes'};map.nodes.push(node);selectedId=node.id;saveMap();render()};
-document.getElementById('saveNodeBtn').onclick=()=>{const n=findNode(selectedId);if(!n)return;n.title=titleInput.value;n.meta=metaInput.value;n.color=colorInput.value;n.content=contentInput.value;saveMap();render()};
-document.getElementById('deleteNodeBtn').onclick=()=>{if(!selectedId)return;map.nodes=map.nodes.filter(n=>n.id!==selectedId);map.links=map.links.filter(l=>l.from!==selectedId&&l.to!==selectedId);selectedId=null;saveMap();render()};
-document.getElementById('clearLinksBtn').onclick=()=>{map.links=[];saveMap();renderLinks()};
+document.getElementById('addNodeBtn').onclick=()=>{const node={id:uid(),x:200+Math.random()*500,y:120+Math.random()*500,title:'Nouvelle case',meta:'Sous-titre',color:'#7c3aed',content:'Édite-moi'};map.nodes.push(node);selectedId=node.id;saveMapLocal();scheduleSharedSave();render()};
+document.getElementById('addServerTemplateBtn').onclick=()=>{const node={id:uid(),x:240+Math.random()*600,y:140+Math.random()*520,title:'srvXXXXXXX',meta:'IP · périmètre',color:'#38bdf8',content:'Bot(s)\nN8N\nRôle\nNotes'};map.nodes.push(node);selectedId=node.id;saveMapLocal();scheduleSharedSave();render()};
+document.getElementById('saveNodeBtn').onclick=()=>{const n=findNode(selectedId);if(!n)return;n.title=titleInput.value;n.meta=metaInput.value;n.color=colorInput.value;n.content=contentInput.value;saveMapLocal();scheduleSharedSave();render()};
+document.getElementById('deleteNodeBtn').onclick=()=>{if(!selectedId)return;map.nodes=map.nodes.filter(n=>n.id!==selectedId);map.links=map.links.filter(l=>l.from!==selectedId&&l.to!==selectedId);selectedId=null;saveMapLocal();scheduleSharedSave();render()};
+document.getElementById('clearLinksBtn').onclick=()=>{map.links=[];saveMapLocal();scheduleSharedSave();renderLinks()};
 document.getElementById('exportBtn').onclick=()=>{jsonBox.value=JSON.stringify(map,null,2)};
 document.getElementById('copyBtn').onclick=async()=>{jsonBox.value=JSON.stringify(map,null,2);await navigator.clipboard.writeText(jsonBox.value);alert('JSON copié')};
-document.getElementById('importBtn').onclick=()=>{try{map=JSON.parse(jsonBox.value);saveMap();selectedId=null;render()}catch(e){alert('JSON invalide')}};
-document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser la carte ?')){map=structuredClone(defaultMap);selectedId=null;saveMap();render()}};
+document.getElementById('syncNowBtn').onclick=async()=>{const ok=await saveMap(true);if(ok) await loadRemoteMap();};
+document.getElementById('importBtn').onclick=()=>{try{map=JSON.parse(jsonBox.value);saveMapLocal();scheduleSharedSave();selectedId=null;render()}catch(e){alert('JSON invalide')}};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser la carte ?')){map=structuredClone(defaultMap);selectedId=null;saveMapLocal();scheduleSharedSave();render()}};
 document.getElementById('openSidebarBtn').onclick=()=>sidebar.classList.add('open');
 document.getElementById('closeSidebarBtn').onclick=()=>sidebar.classList.remove('open');
+window.addEventListener('beforeunload',()=>{try{navigator.sendBeacon(SHARED_SAVE_URL,new Blob([JSON.stringify({type:SHARED_EVENT_TYPE,savedAt:new Date().toISOString(),map})],{type:'application/json'}))}catch(e){}});
 render();
+loadRemoteMap();
+setInterval(loadRemoteMap,15000);
 </script>
 </body>
 </html>
