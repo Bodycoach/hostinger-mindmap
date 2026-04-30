@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mind map — serveurs Hostinger</title>
+  <style>
+    :root{
+      --bg:#0b1020;--card:#121933;--card2:#182140;--text:#eef2ff;--muted:#aab4d6;
+      --a:#7c3aed;--b:#06b6d4;--c:#22c55e;--d:#f59e0b;--e:#ef4444;
+      --line:rgba(255,255,255,.12);
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at top,#182040 0,#0b1020 55%);color:var(--text)}
+    .wrap{max-width:1500px;margin:0 auto;padding:32px 24px 80px}
+    h1{font-size:42px;line-height:1.05;margin:0 0 10px}
+    .sub{color:var(--muted);font-size:18px;max-width:900px;margin-bottom:28px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.03)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:22px}
+    .server{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .server h2{margin:0 0 8px;font-size:28px}.meta{color:var(--muted);margin-bottom:14px}.tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;margin:0 6px 6px 0}
+    .t1{background:rgba(124,58,237,.18);color:#d8b4fe}.t2{background:rgba(6,182,212,.18);color:#a5f3fc}.t3{background:rgba(34,197,94,.18);color:#bbf7d0}.t4{background:rgba(245,158,11,.18);color:#fde68a}.t5{background:rgba(239,68,68,.18);color:#fecaca}
+    .tree{margin-top:16px;padding-left:0;list-style:none}.tree>li{margin:12px 0;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03)}
+    .tree strong{display:block;font-size:15px;margin-bottom:8px}.tree ul{margin:8px 0 0 0;padding-left:18px;color:var(--muted)}.tree li li{margin:6px 0}
+    .map{margin-top:30px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:28px;padding:30px;overflow:auto}
+    .mind{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:18px;align-items:start;min-width:1180px}
+    .root{display:flex;align-items:center;justify-content:center;min-height:220px;border-radius:28px;background:linear-gradient(135deg,#6d28d9,#0891b2);padding:30px;text-align:center;font-size:34px;font-weight:800;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+    .branch{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:24px;padding:18px;position:relative}.branch h3{margin:0 0 10px;font-size:22px}.branch p{margin:0 0 12px;color:var(--muted)}
+    .node{border-left:3px solid #fff3;border-radius:16px;background:rgba(255,255,255,.03);padding:12px 14px;margin:10px 0}.node h4{margin:0 0 6px;font-size:16px}.node ul{margin:0;padding-left:18px;color:var(--muted)}
+    .foot{margin-top:22px;color:var(--muted);font-size:14px}
+    a{color:#93c5fd}
+    @media (max-width:1100px){.grid{grid-template-columns:1fr}.mind{grid-template-columns:1fr;min-width:0}.root{min-height:auto;font-size:28px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Mind map — serveurs Hostinger</h1>
+    <div class="sub">Vue d’ensemble des <strong>4 serveurs</strong>, des bots présents, de leur rôle et des différences d’architecture entre EA / CB360, LABZ, AlphaIA et le serveur distinct de Damien.</div>
+    <div class="legend">
+      <span class="pill">Compte Hostinger principal : 3 serveurs</span>
+      <span class="pill">Compte Hostinger secondaire : 1 serveur</span>
+      <span class="pill">OpenClaw, N8N, Slack, WhatsApp, backend AlphaIA</span>
+    </div>
+
+    <section class="map">
+      <div class="mind">
+        <div class="root">Infra Hostinger<br>Antony / Damien</div>
+
+        <div class="branch">
+          <h3>Compte Hostinger principal</h3>
+          <p>3 serveurs orientés EA / LABZ / AlphaIA.</p>
+          <div class="node">
+            <h4>srv1494125 · 72.62.22.25</h4>
+            <ul>
+              <li><strong>Athéna</strong> — OpenClaw Slack EA, assistante IA équipe Entrepreneuses Académie</li>
+              <li><strong>IRIS</strong> — bot WhatsApp avec STT local + TTS Piper</li>
+              <li><strong>N8N EA</strong> — <code>n8n.entrepreneusesacademie.fr</code></li>
+              <li>Périmètre : EA / CB360</li>
+            </ul>
+          </div>
+          <div class="node">
+            <h4>srv807991 · 168.231.108.39</h4>
+            <ul>
+              <li><strong>Titan</strong> — OpenClaw Slack LABZ</li>
+              <li><strong>N8N</strong>, <strong>PostgreSQL</strong>, <strong>Qdrant</strong></li>
+              <li>Périmètre : LABZ Nutrition</li>
+            </ul>
+          </div>
+          <div class="node">
+            <h4>srv1320382 · 187.77.166.26</h4>
+            <ul>
+              <li><strong>AlphaIA</strong> — backend, frontend, postgres, redis</li>
+              <li><strong>Karine SAV</strong> — bot Slack indépendant via backend AlphaIA</li>
+              <li><strong>N8N AlphaIA</strong> — <code>n8n.alphaia.fr</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="branch">
+          <h3>Compte Hostinger secondaire</h3>
+          <p>1 serveur distinct, côté Damien.</p>
+          <div class="node">
+            <h4>srv774083 · 82.25.115.108</h4>
+            <ul>
+              <li><strong>N8N distinct</strong></li>
+              <li>Workflow confirmé : <strong>Karine — SAV Drafts</strong></li>
+              <li>Périmètre : automatisation SAV EA</li>
+              <li>Serveur séparé de l’infra AlphaIA principale</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" style="margin-top:28px">
+      <article class="server">
+        <h2>srv1494125</h2>
+        <div class="meta">72.62.22.25 · EA / CB360</div>
+        <span class="tag t1">Athéna</span><span class="tag t2">IRIS</span><span class="tag t3">N8N EA</span>
+        <ul class="tree">
+          <li><strong>Athéna</strong>
+            <ul>
+              <li>Instance OpenClaw</li>
+              <li>Canal : Slack Team Entrepreneuses Académie</li>
+              <li>Modèle : Claude Opus</li>
+              <li>Rôle : assistante IA pour l’équipe EA</li>
+            </ul>
+          </li>
+          <li><strong>IRIS</strong>
+            <ul>
+              <li>Bot WhatsApp</li>
+              <li>STT local actif</li>
+              <li>TTS Piper actif</li>
+              <li>Rôle : interactions vocales WhatsApp</li>
+            </ul>
+          </li>
+          <li><strong>N8N EA</strong>
+            <ul>
+              <li>URL : n8n.entrepreneusesacademie.fr</li>
+              <li>Port local 5678 + reverse proxy nginx</li>
+              <li>Workflows EA / SAV / brouillons / résumés</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+
+      <article class="server">
+        <h2>srv807991</h2>
+        <div class="meta">168.231.108.39 · LABZ Nutrition</div>
+        <span class="tag t1">Titan</span><span class="tag t3">N8N</span><span class="tag t4">PostgreSQL</span><span class="tag t4">Qdrant</span>
+        <ul class="tree">
+          <li><strong>Titan</strong>
+            <ul>
+              <li>Instance OpenClaw</li>
+              <li>Canal : Slack LABZ</li>
+              <li>Modèle : openai-codex/gpt-5.4</li>
+              <li>Rôle : assistant IA équipe LABZ</li>
+            </ul>
+          </li>
+          <li><strong>Stack technique</strong>
+            <ul>
+              <li>N8N en HTTPS</li>
+              <li>PostgreSQL</li>
+              <li>Qdrant</li>
+              <li>Patchs Codex spécifiques appliqués</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+
+      <article class="server">
+        <h2>srv1320382</h2>
+        <div class="meta">187.77.166.26 · AlphaIA principal</div>
+        <span class="tag t3">AlphaIA</span><span class="tag t5">Karine SAV</span><span class="tag t3">N8N AlphaIA</span>
+        <ul class="tree">
+          <li><strong>AlphaIA app</strong>
+            <ul>
+              <li>Docker Compose</li>
+              <li>backend / frontend / postgres / redis</li>
+              <li>Infra principale produit</li>
+            </ul>
+          </li>
+          <li><strong>Karine SAV</strong>
+            <ul>
+              <li>Bot Slack indépendant</li>
+              <li>Pas une instance OpenClaw classique</li>
+              <li>Branché au backend AlphaIA via webhook HTTP</li>
+              <li>Lit des mails et crée des brouillons</li>
+            </ul>
+          </li>
+          <li><strong>N8N AlphaIA</strong>
+            <ul>
+              <li>URL : n8n.alphaia.fr</li>
+              <li>Automatisations commerciales / scraping / CRM</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+
+      <article class="server">
+        <h2>srv774083</h2>
+        <div class="meta">82.25.115.108 · serveur distinct Damien</div>
+        <span class="tag t2">N8N distinct</span><span class="tag t5">SAV EA</span>
+        <ul class="tree">
+          <li><strong>N8N srv774083</strong>
+            <ul>
+              <li>Workflow confirmé : Karine — SAV Drafts</li>
+              <li>Automatisation SAV dédiée</li>
+              <li>Environnement séparé de l’infra AlphaIA principale</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="foot">Visuel généré pour Antony — synthèse infra Hostinger à partir de la config locale et de la mémoire opérationnelle.</div>
+  </div>
+</body>
+</html>
