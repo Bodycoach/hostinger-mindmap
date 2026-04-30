@@ -3,196 +3,135 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mind map — serveurs Hostinger</title>
+  <title>Infra Hostinger — Mind map visuelle</title>
   <style>
     :root{
-      --bg:#0b1020;--card:#121933;--card2:#182140;--text:#eef2ff;--muted:#aab4d6;
-      --a:#7c3aed;--b:#06b6d4;--c:#22c55e;--d:#f59e0b;--e:#ef4444;
-      --line:rgba(255,255,255,.12);
+      --bg:#07111f;--bg2:#0c1830;--card:#101a33cc;--line:rgba(255,255,255,.1);--text:#eef4ff;--muted:#a7b6d6;
+      --ea:#7c3aed;--labz:#10b981;--alpha:#f59e0b;--damien:#38bdf8;--danger:#ef4444;
     }
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at top,#182040 0,#0b1020 55%);color:var(--text)}
-    .wrap{max-width:1500px;margin:0 auto;padding:32px 24px 80px}
-    h1{font-size:42px;line-height:1.05;margin:0 0 10px}
-    .sub{color:var(--muted);font-size:18px;max-width:900px;margin-bottom:28px}
-    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.03)}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:
+      radial-gradient(circle at 10% 10%, rgba(124,58,237,.22), transparent 25%),
+      radial-gradient(circle at 85% 15%, rgba(16,185,129,.14), transparent 22%),
+      radial-gradient(circle at 50% 100%, rgba(245,158,11,.12), transparent 30%),
+      linear-gradient(180deg,var(--bg),var(--bg2));}
+    .wrap{max-width:1600px;margin:auto;padding:32px 20px 80px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:stretch;margin-bottom:24px}
+    .hero-card,.info-card,.server,.branch{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+    .hero-card{padding:30px}
+    h1{font-size:48px;line-height:1;margin:0 0 14px}
+    .lead{font-size:18px;color:var(--muted);max-width:850px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{padding:10px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;color:#dbe7ff;background:rgba(255,255,255,.04)}
+    .info-card{padding:22px 24px;display:flex;flex-direction:column;justify-content:center}
+    .info-card h2{margin:0 0 12px;font-size:22px}.info-card p{margin:0;color:var(--muted);line-height:1.55}
+    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.kpi{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)}.kpi b{display:block;font-size:24px}.kpi span{color:var(--muted);font-size:13px}
+
+    .map{padding:24px;margin-bottom:28px;overflow:auto}
+    .mind{min-width:1300px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:20px;align-items:start}
+    .root{min-height:280px;border-radius:32px;padding:36px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:38px;line-height:1.05;background:linear-gradient(135deg,#6d28d9,#2563eb 60%,#0ea5e9);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 30px 80px rgba(37,99,235,.2)}
+    .branch{padding:18px}.branch h3{margin:0 0 8px;font-size:24px}.branch p{margin:0 0 16px;color:var(--muted)}
+    .node{padding:14px 16px;margin:12px 0;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.035)}
+    .node h4{margin:0 0 8px;font-size:17px}.node ul{margin:0;padding-left:18px;color:var(--muted)}.node li{margin:6px 0}
+    .ea{box-shadow:inset 3px 0 0 var(--ea)} .labz{box-shadow:inset 3px 0 0 var(--labz)} .alpha{box-shadow:inset 3px 0 0 var(--alpha)} .damien{box-shadow:inset 3px 0 0 var(--damien)}
+
     .grid{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:22px}
-    .server{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .server h2{margin:0 0 8px;font-size:28px}.meta{color:var(--muted);margin-bottom:14px}.tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em;margin:0 6px 6px 0}
-    .t1{background:rgba(124,58,237,.18);color:#d8b4fe}.t2{background:rgba(6,182,212,.18);color:#a5f3fc}.t3{background:rgba(34,197,94,.18);color:#bbf7d0}.t4{background:rgba(245,158,11,.18);color:#fde68a}.t5{background:rgba(239,68,68,.18);color:#fecaca}
-    .tree{margin-top:16px;padding-left:0;list-style:none}.tree>li{margin:12px 0;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03)}
-    .tree strong{display:block;font-size:15px;margin-bottom:8px}.tree ul{margin:8px 0 0 0;padding-left:18px;color:var(--muted)}.tree li li{margin:6px 0}
-    .map{margin-top:30px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:28px;padding:30px;overflow:auto}
-    .mind{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:18px;align-items:start;min-width:1180px}
-    .root{display:flex;align-items:center;justify-content:center;min-height:220px;border-radius:28px;background:linear-gradient(135deg,#6d28d9,#0891b2);padding:30px;text-align:center;font-size:34px;font-weight:800;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-    .branch{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:24px;padding:18px;position:relative}.branch h3{margin:0 0 10px;font-size:22px}.branch p{margin:0 0 12px;color:var(--muted)}
-    .node{border-left:3px solid #fff3;border-radius:16px;background:rgba(255,255,255,.03);padding:12px 14px;margin:10px 0}.node h4{margin:0 0 6px;font-size:16px}.node ul{margin:0;padding-left:18px;color:var(--muted)}
-    .foot{margin-top:22px;color:var(--muted);font-size:14px}
-    a{color:#93c5fd}
-    @media (max-width:1100px){.grid{grid-template-columns:1fr}.mind{grid-template-columns:1fr;min-width:0}.root{min-height:auto;font-size:28px}}
+    .server{padding:22px;position:relative;overflow:hidden}
+    .server:before{content:"";position:absolute;inset:-30% auto auto -20%;width:220px;height:220px;border-radius:999px;filter:blur(40px);opacity:.16}
+    .server.ea:before{background:var(--ea)} .server.labz:before{background:var(--labz)} .server.alpha:before{background:var(--alpha)} .server.damien:before{background:var(--damien)}
+    .server h2{margin:0;font-size:30px}.meta{margin:6px 0 14px;color:var(--muted)}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.badge{padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.02em}
+    .b-ea{background:rgba(124,58,237,.18);color:#ddd6fe}.b-labz{background:rgba(16,185,129,.18);color:#bbf7d0}.b-alpha{background:rgba(245,158,11,.18);color:#fde68a}.b-damien{background:rgba(56,189,248,.18);color:#bae6fd}.b-red{background:rgba(239,68,68,.18);color:#fecaca}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03)}.panel strong{display:block;margin-bottom:8px}.panel ul{margin:0;padding-left:18px;color:var(--muted)}.panel li{margin:6px 0}
+    .footer{margin-top:18px;color:var(--muted);font-size:14px}
+    @media (max-width:1100px){.hero,.grid{grid-template-columns:1fr}.mind{grid-template-columns:1fr;min-width:0}.root{min-height:180px;font-size:30px}.cols{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Mind map — serveurs Hostinger</h1>
-    <div class="sub">Vue d’ensemble des <strong>4 serveurs</strong>, des bots présents, de leur rôle et des différences d’architecture entre EA / CB360, LABZ, AlphaIA et le serveur distinct de Damien.</div>
-    <div class="legend">
-      <span class="pill">Compte Hostinger principal : 3 serveurs</span>
-      <span class="pill">Compte Hostinger secondaire : 1 serveur</span>
-      <span class="pill">OpenClaw, N8N, Slack, WhatsApp, backend AlphaIA</span>
-    </div>
-
-    <section class="map">
-      <div class="mind">
-        <div class="root">Infra Hostinger<br>Antony / Damien</div>
-
-        <div class="branch">
-          <h3>Compte Hostinger principal</h3>
-          <p>3 serveurs orientés EA / LABZ / AlphaIA.</p>
-          <div class="node">
-            <h4>srv1494125 · 72.62.22.25</h4>
-            <ul>
-              <li><strong>Athéna</strong> — OpenClaw Slack EA, assistante IA équipe Entrepreneuses Académie</li>
-              <li><strong>IRIS</strong> — bot WhatsApp avec STT local + TTS Piper</li>
-              <li><strong>N8N EA</strong> — <code>n8n.entrepreneusesacademie.fr</code></li>
-              <li>Périmètre : EA / CB360</li>
-            </ul>
-          </div>
-          <div class="node">
-            <h4>srv807991 · 168.231.108.39</h4>
-            <ul>
-              <li><strong>Titan</strong> — OpenClaw Slack LABZ</li>
-              <li><strong>N8N</strong>, <strong>PostgreSQL</strong>, <strong>Qdrant</strong></li>
-              <li>Périmètre : LABZ Nutrition</li>
-            </ul>
-          </div>
-          <div class="node">
-            <h4>srv1320382 · 187.77.166.26</h4>
-            <ul>
-              <li><strong>AlphaIA</strong> — backend, frontend, postgres, redis</li>
-              <li><strong>Karine SAV</strong> — bot Slack indépendant via backend AlphaIA</li>
-              <li><strong>N8N AlphaIA</strong> — <code>n8n.alphaia.fr</code></li>
-            </ul>
-          </div>
+    <section class="hero">
+      <div class="hero-card">
+        <h1>Mind map visuelle<br>des serveurs Hostinger</h1>
+        <div class="lead">Vue d’ensemble des <strong>4 serveurs</strong> répartis sur <strong>2 comptes Hostinger</strong>, avec pour chacun les bots présents, leur rôle, les services hébergés et le périmètre business couvert.</div>
+        <div class="chips">
+          <div class="chip">Entrepreneuses Académie / CB360</div>
+          <div class="chip">LABZ Nutrition</div>
+          <div class="chip">AlphaIA</div>
+          <div class="chip">Slack · WhatsApp · N8N · Backend</div>
         </div>
-
-        <div class="branch">
-          <h3>Compte Hostinger secondaire</h3>
-          <p>1 serveur distinct, côté Damien.</p>
-          <div class="node">
-            <h4>srv774083 · 82.25.115.108</h4>
-            <ul>
-              <li><strong>N8N distinct</strong></li>
-              <li>Workflow confirmé : <strong>Karine — SAV Drafts</strong></li>
-              <li>Périmètre : automatisation SAV EA</li>
-              <li>Serveur séparé de l’infra AlphaIA principale</li>
-            </ul>
-          </div>
+      </div>
+      <div class="info-card">
+        <h2>Lecture rapide</h2>
+        <p>Le gros point à retenir : <strong>Athéna</strong>, <strong>IRIS</strong>, <strong>Titan</strong> et <strong>Karine SAV</strong> ne sont pas la même architecture. Certains sont des instances OpenClaw, d’autres des bots séparés, et un des serveurs est totalement distinct côté Damien.</p>
+        <div class="kpis">
+          <div class="kpi"><b>4</b><span>serveurs cartographiés</span></div>
+          <div class="kpi"><b>2</b><span>comptes Hostinger</span></div>
+          <div class="kpi"><b>3</b><span>périmètres business principaux</span></div>
+          <div class="kpi"><b>6+</b><span>bots / services structurants</span></div>
         </div>
       </div>
     </section>
 
-    <section class="grid" style="margin-top:28px">
-      <article class="server">
+    <section class="map hero-card">
+      <div class="mind">
+        <div class="root">Infra Hostinger<br>Antony / Damien</div>
+        <div class="branch">
+          <h3>Compte Hostinger principal</h3>
+          <p>3 serveurs orientés EA / LABZ / AlphaIA.</p>
+          <div class="node ea"><h4>srv1494125 · 72.62.22.25</h4><ul><li>Athéna — OpenClaw Slack EA</li><li>IRIS — bot WhatsApp vocal</li><li>N8N EA — automatisations Entrepreneuses Académie</li></ul></div>
+          <div class="node labz"><h4>srv807991 · 168.231.108.39</h4><ul><li>Titan — OpenClaw Slack LABZ</li><li>N8N + PostgreSQL + Qdrant</li><li>Serveur ops / IA principal LABZ</li></ul></div>
+          <div class="node alpha"><h4>srv1320382 · 187.77.166.26</h4><ul><li>Backend / frontend AlphaIA</li><li>Karine SAV via backend AlphaIA</li><li>N8N AlphaIA</li></ul></div>
+        </div>
+        <div class="branch">
+          <h3>Compte Hostinger secondaire</h3>
+          <p>1 serveur distinct, séparé de l’infra AlphaIA principale.</p>
+          <div class="node damien"><h4>srv774083 · 82.25.115.108</h4><ul><li>N8N distinct côté Damien</li><li>Workflow confirmé : Karine — SAV Drafts</li><li>Automatisation SAV EA spécifique</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="server ea">
         <h2>srv1494125</h2>
-        <div class="meta">72.62.22.25 · EA / CB360</div>
-        <span class="tag t1">Athéna</span><span class="tag t2">IRIS</span><span class="tag t3">N8N EA</span>
-        <ul class="tree">
-          <li><strong>Athéna</strong>
-            <ul>
-              <li>Instance OpenClaw</li>
-              <li>Canal : Slack Team Entrepreneuses Académie</li>
-              <li>Modèle : Claude Opus</li>
-              <li>Rôle : assistante IA pour l’équipe EA</li>
-            </ul>
-          </li>
-          <li><strong>IRIS</strong>
-            <ul>
-              <li>Bot WhatsApp</li>
-              <li>STT local actif</li>
-              <li>TTS Piper actif</li>
-              <li>Rôle : interactions vocales WhatsApp</li>
-            </ul>
-          </li>
-          <li><strong>N8N EA</strong>
-            <ul>
-              <li>URL : n8n.entrepreneusesacademie.fr</li>
-              <li>Port local 5678 + reverse proxy nginx</li>
-              <li>Workflows EA / SAV / brouillons / résumés</li>
-            </ul>
-          </li>
-        </ul>
+        <div class="meta">72.62.22.25 · pôle EA / CB360</div>
+        <div class="badges"><span class="badge b-ea">Athéna</span><span class="badge b-damien">IRIS</span><span class="badge b-alpha">N8N EA</span></div>
+        <div class="cols">
+          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li><b>Athéna</b> : OpenClaw, Slack Team Entrepreneuses Académie, port 18790</li><li><b>IRIS</b> : bot WhatsApp avec STT local et TTS Piper</li><li><b>N8N EA</b> : <code>n8n.entrepreneusesacademie.fr</code></li></ul></div>
+          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Support IA équipe EA</li><li>Interactions vocales WhatsApp</li><li>Automatisations SAV / brouillons / résumés</li><li>Périmètre : Entrepreneuses Académie + CB360</li></ul></div>
+        </div>
       </article>
 
-      <article class="server">
+      <article class="server labz">
         <h2>srv807991</h2>
-        <div class="meta">168.231.108.39 · LABZ Nutrition</div>
-        <span class="tag t1">Titan</span><span class="tag t3">N8N</span><span class="tag t4">PostgreSQL</span><span class="tag t4">Qdrant</span>
-        <ul class="tree">
-          <li><strong>Titan</strong>
-            <ul>
-              <li>Instance OpenClaw</li>
-              <li>Canal : Slack LABZ</li>
-              <li>Modèle : openai-codex/gpt-5.4</li>
-              <li>Rôle : assistant IA équipe LABZ</li>
-            </ul>
-          </li>
-          <li><strong>Stack technique</strong>
-            <ul>
-              <li>N8N en HTTPS</li>
-              <li>PostgreSQL</li>
-              <li>Qdrant</li>
-              <li>Patchs Codex spécifiques appliqués</li>
-            </ul>
-          </li>
-        </ul>
+        <div class="meta">168.231.108.39 · pôle LABZ</div>
+        <div class="badges"><span class="badge b-labz">Titan</span><span class="badge b-alpha">N8N</span><span class="badge b-labz">PostgreSQL</span><span class="badge b-labz">Qdrant</span></div>
+        <div class="cols">
+          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li><b>Titan</b> : OpenClaw Slack LABZ</li><li>N8N en HTTPS</li><li>PostgreSQL</li><li>Qdrant</li></ul></div>
+          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Assistant IA équipe LABZ</li><li>Automatisations internes</li><li>Socle technique plus “stack produit”</li><li>Patchs Codex spécifiques déjà appliqués</li></ul></div>
+        </div>
       </article>
 
-      <article class="server">
+      <article class="server alpha">
         <h2>srv1320382</h2>
-        <div class="meta">187.77.166.26 · AlphaIA principal</div>
-        <span class="tag t3">AlphaIA</span><span class="tag t5">Karine SAV</span><span class="tag t3">N8N AlphaIA</span>
-        <ul class="tree">
-          <li><strong>AlphaIA app</strong>
-            <ul>
-              <li>Docker Compose</li>
-              <li>backend / frontend / postgres / redis</li>
-              <li>Infra principale produit</li>
-            </ul>
-          </li>
-          <li><strong>Karine SAV</strong>
-            <ul>
-              <li>Bot Slack indépendant</li>
-              <li>Pas une instance OpenClaw classique</li>
-              <li>Branché au backend AlphaIA via webhook HTTP</li>
-              <li>Lit des mails et crée des brouillons</li>
-            </ul>
-          </li>
-          <li><strong>N8N AlphaIA</strong>
-            <ul>
-              <li>URL : n8n.alphaia.fr</li>
-              <li>Automatisations commerciales / scraping / CRM</li>
-            </ul>
-          </li>
-        </ul>
+        <div class="meta">187.77.166.26 · pôle AlphaIA principal</div>
+        <div class="badges"><span class="badge b-alpha">AlphaIA</span><span class="badge b-red">Karine SAV</span><span class="badge b-alpha">N8N AlphaIA</span></div>
+        <div class="cols">
+          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li>Backend / frontend / postgres / redis</li><li><b>Karine SAV</b> branchée via backend AlphaIA</li><li><code>n8n.alphaia.fr</code></li></ul></div>
+          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Infra principale AlphaIA</li><li>Workflows CRM / scraping / campagnes</li><li>Brouillons SAV via bot séparé</li><li>Karine ici ≠ Athéna</li></ul></div>
+        </div>
       </article>
 
-      <article class="server">
+      <article class="server damien">
         <h2>srv774083</h2>
         <div class="meta">82.25.115.108 · serveur distinct Damien</div>
-        <span class="tag t2">N8N distinct</span><span class="tag t5">SAV EA</span>
-        <ul class="tree">
-          <li><strong>N8N srv774083</strong>
-            <ul>
-              <li>Workflow confirmé : Karine — SAV Drafts</li>
-              <li>Automatisation SAV dédiée</li>
-              <li>Environnement séparé de l’infra AlphaIA principale</li>
-            </ul>
-          </li>
-        </ul>
+        <div class="badges"><span class="badge b-damien">N8N distinct</span><span class="badge b-red">SAV EA</span></div>
+        <div class="cols">
+          <div class="panel"><strong>Ce qu’il y a dessus</strong><ul><li>N8N séparé</li><li>Workflow confirmé : <b>Karine — SAV Drafts</b></li></ul></div>
+          <div class="panel"><strong>Ce que ça fait</strong><ul><li>Automatisation SAV dédiée</li><li>Environnement séparé de l’infra AlphaIA principale</li><li>Espace d’intervention direct côté Damien</li></ul></div>
+        </div>
       </article>
     </section>
 
-    <div class="foot">Visuel généré pour Antony — synthèse infra Hostinger à partir de la config locale et de la mémoire opérationnelle.</div>
+    <div class="footer">Version visuelle enrichie — focus infra, bots, rôles et séparation des architectures.</div>
   </div>
 </body>
 </html>
